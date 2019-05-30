@@ -1,28 +1,38 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <v-toolbar app>
+      <v-toolbar-title class="headline text-uppercase">
+        <span>Traffic</span>
+        <span class="font-weight-light"> Data Visualization</span>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn
+        flat
+        href="https://d3js.org/"
+        target="_blank"
+      >
+        <span class="mr-2">Baseon D3</span>
+      </v-btn>
+    </v-toolbar>
+
+    <v-content>
+      <D3_HeatMap/>
+    </v-content>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import D3_HeatMap from './components/d3_heatmap'
 
 export default {
-  name: 'app',
+  name: 'App',
   components: {
-    HelloWorld
+    D3_HeatMap
+  },
+  data () {
+    return {
+      //
+    }
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
