@@ -1,7 +1,9 @@
 # d3_heatmap
 
-#### 用d3 实作的一个可切换资料的heat map
-
+#### 用d3 实作的一个可切换资料的heat map,通过点选 button 切换数据
+#### 预览效果如下
+![](https://i.imgur.com/untqs6J.png)
+![](https://i.imgur.com/J5Z0eFk.png)
 ## Project setup
 ```
 npm install
