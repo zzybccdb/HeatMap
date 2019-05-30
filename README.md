@@ -1,5 +1,7 @@
 # d3_heatmap
 
+#### 用d3 实作的一个可切换资料的heat map
+
 ## Project setup
 ```
 npm install
