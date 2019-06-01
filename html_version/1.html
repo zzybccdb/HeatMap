@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <title>Document</title>
+
+</head>
+<body>
+    <h1>When Fatal Crashes Happened</h1>
+    <div class="desc centered">
+        Each cell represents the percentage of crashes involving the selected factor, occurring during the given month and time in 2015.
+    </div>
+    <button onclick="updateData('./data/ALL-NO.csv')" ><font color="#FF0000">All Region</font> - Alcohol :<font color="#FF0000">NO</font></button>
+    <button onclick="updateData('./data/ALL-YES.csv')"><font color="#FF0000">All Region</font> - Alcohol :<font color="#FF0000">YES</font></button>
+    <button onclick="updateData('./data/COUNTRY-NO.csv')"><font color="#FF0000">COUNTRY Region</font> - Alcohol :<font color="#FF0000">NO</font></button>
+    <button onclick="updateData('./data/COUNTRY-YES.csv')"><font color="#FF0000">COUNTRY Region</font> - Alcohol :<font color="#FF0000">YES</font></button>
+    <button onclick="updateData('./data/METRO-NO.csv')"><font color="#FF0000">METRO Region</font> - Alcohol :<font color="#FF0000">NO</font></button>
+    <button onclick="updateData('./data/METRO-YES.csv')"><font color="#FF0000">METRO Region</font> - Alcohol :<font color="#FF0000">YES</font></button>    
+    <div ref="heatmap" id='heatmap'></div>
+</body>
+</html>
+<script>
+    console.log("hello world")
+    let vm = {}
+    d3InitSet(vm)
+    drawTicks(vm)
+    dataLoad(vm)
+
+    function d3InitSet(vm){
+        // 设定图表长宽,四周间隔
+        let margin = {top: 20, right: 20, bottom: 40, left: 40}
+        vm.width = 800 - margin.left - margin.right
+        vm.height = 450 - margin.top - margin.bottom
+
+        // 绑定页面 div, 在 div 下新增 svg
+        vm.svg = d3.select("#heatmap")
+            .append("svg")
+            .attr("id",'my_heatmap')
+            .attr("width", vm.width + margin.left + margin.right)
+            .attr("height", vm.height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform","translate(" + margin.left + "," + margin.top + ")")
+
+
+        // 设定 heatmap 的轴线 label
+        let labelX = []
+        let labelY = []
+        labelY = ['Jan','Feb','March','April','May','June','July','Aug','Sept','Oct','Nov','Dec']
+        for(let i = 1; i <=12; i++){
+            //labelY.push(''+i)
+            labelX.push(''+(2*i-2)+('hr'))
+            labelX.push(''+(2*i-1)+('hr'))
+        } 
+        
+        // 设定轴线, 并绑定到 this 下
+        // scaleBand 将定义域对应到 range 上
+        vm.X = d3.scaleBand()
+            .range([ 0, vm.width ])
+            .domain(labelX)
+            .padding(0.01)
+        
+        vm.Y = d3.scaleBand()
+            .range([vm.height,0])
+            .domain(labelY)
+            .padding(0.01)
+
+        // 颜色比例尺设定
+        vm.color = d3.scaleLinear()
+            .range(["#FFFAFA", "#FF0000"])
+            .domain([0,1])
+        vm.labelY = labelY
+    }
+    function drawTicks(vm){
+        // 设定轴线信息
+        vm.Xaxis = d3.axisBottom(vm.X)
+        vm.Yaxis = d3.axisLeft(vm.Y)
+
+        // 在 svg 下加入两个 group, 这个 group 包含两个轴线的信息
+        vm.svg.append("g").attr("id","axis").attr("transform", "translate(0," + vm.height + ")").call(vm.Xaxis).call(g => g.select(".domain").remove())
+        vm.svg.append("g").call(vm.Yaxis).call(g => g.select(".domain").remove())
+    }
+    function dataLoad(vm){
+        d3.csv("./data/ALL-NO.csv").then((data)=>{
+            vm.svg.selectAll("rect")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("x", function(d) { return vm.X(d.HOUR+'hr') })
+                .attr("y", function(d) { return vm.Y(vm.labelY[d.MONTH-1]) })
+                .attr("width", vm.X.bandwidth() )
+                .attr("height", vm.Y.bandwidth() )
+                .style("fill", function(d) { return vm.color(d.percent)} )         
+        })           
+    }
+    function updateData(filename){
+        d3.csv(filename).then((data)=>{
+            vm.svg.selectAll("rect").data(data).style("fill", function(d) { return vm.color(d.percent)} )      
+        })        
+    }
+</script>
+<style>
+        line{
+            visibility:hidden
+        }
+</style>

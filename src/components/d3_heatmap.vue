@@ -91,9 +91,9 @@
                 // 这里注意下,如果训练教材 code 写法是,且无法顺利执行,请参考这里的写法
 
                 // d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/heatmap_data.csv", function(data) {
-
-                //   svg.selectAll()
-                //       .data(data, function(d) {return d.group+':'+d.variable;})
+                //   console.log(data)
+                //   vm.svg.selectAll()
+                //       .data(data, function(d) {console.log(d);return d.group+':'+d.variable;})
                 //       .enter()
                 //       .append("rect")
                 //       .attr("x", function(d) { return x(d.group) })
